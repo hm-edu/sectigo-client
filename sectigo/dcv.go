@@ -2,6 +2,7 @@ package sectigo
 
 import (
 	"context"
+
 	"github.com/hm-edu/sectigo-client/sectigo/domain"
 )
 
@@ -46,26 +47,26 @@ type SubmitCnameResponse struct {
 }
 
 func (c *DomainValidationService) List() (*[]ListDcvItem, error) {
-	data, _, err := Get[[]ListDcvItem](c.Client, context.Background(), "/dcv/v1/validation")
+	data, _, err := Get[[]ListDcvItem](context.Background(), c.Client, "/dcv/v1/validation")
 	return data, err
 }
 
 func (c *DomainValidationService) Status(domain string) (*StatusResponse, error) {
-	data, _, err := Post[StatusResponse](c.Client, context.Background(), "/dcv/v2/validation/status", DcvRequest{
+	data, _, err := Post[StatusResponse](context.Background(), c.Client, "/dcv/v2/validation/status", DcvRequest{
 		Domain: domain,
 	})
 	return data, err
 }
 
 func (c *DomainValidationService) StartCname(domain string) (*StartCnameResponse, error) {
-	data, _, err := Post[StartCnameResponse](c.Client, context.Background(), "/dcv/v1/validation/start/domain/cname", DcvRequest{
+	data, _, err := Post[StartCnameResponse](context.Background(), c.Client, "/dcv/v1/validation/start/domain/cname", DcvRequest{
 		Domain: domain,
 	})
 	return data, err
 }
 
 func (c *DomainValidationService) SubmitCname(domain string) (*SubmitCnameResponse, error) {
-	data, _, err := Post[SubmitCnameResponse](c.Client, context.Background(), "/dcv/v1/validation/submit/domain/cname", DcvRequest{
+	data, _, err := Post[SubmitCnameResponse](context.Background(), c.Client, "/dcv/v1/validation/submit/domain/cname", DcvRequest{
 		Domain: domain,
 	})
 	return data, err

@@ -19,7 +19,7 @@ func TestDomainService_List(t *testing.T) {
 	list, err := c.DomainService.List()
 	assert.Nil(t, err)
 	assert.Equal(t, 1, httpmock.GetTotalCallCount())
-	assert.Equal(t, []ListDomainItem{{Id: 0, Name: "example0.com"}, {Id: 1, Name: "example1.com"}, {Id: 2, Name: "example2.com"}, {Id: 3, Name: "example3.com"}}, *list)
+	assert.Equal(t, []ListDomainItem{{ID: 0, Name: "example0.com"}, {ID: 1, Name: "example1.com"}, {ID: 2, Name: "example2.com"}, {ID: 3, Name: "example3.com"}}, *list)
 }
 
 func TestDomainService_Infos(t *testing.T) {

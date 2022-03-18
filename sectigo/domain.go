@@ -13,7 +13,7 @@ type DomainService struct {
 }
 
 type ListDomainItem struct {
-	Id   int    `json:"id"`
+	ID   int    `json:"id"`
 	Name string `json:"name"`
 }
 
@@ -25,12 +25,12 @@ type CreateDomainRequest struct {
 }
 
 type DelegationRequest struct {
-	OrgId     int             `json:"orgId"`
+	OrgID     int             `json:"orgId"`
 	CertTypes []misc.CertType `json:"certTypes"`
 }
 
 type Delegation struct {
-	OrgId     int                     `json:"orgId"`
+	OrgID     int                     `json:"orgId"`
 	CertTypes []misc.CertType         `json:"certTypes"`
 	Status    domain.DelegationStatus `json:"status"`
 }
@@ -47,18 +47,18 @@ type DomainInfos struct {
 
 // List enumerates all existing domains
 func (c *DomainService) List() (*[]ListDomainItem, error) {
-	data, _, err := Get[[]ListDomainItem](c.Client, context.Background(), "/domain/v1")
+	data, _, err := Get[[]ListDomainItem](context.Background(), c.Client, "/domain/v1")
 	return data, err
 }
 
 // Infos gets the details of a single domain
 func (c *DomainService) Infos(id int) (*DomainInfos, error) {
-	data, _, err := Get[DomainInfos](c.Client, context.Background(), fmt.Sprintf("/domain/v1/%v", id))
+	data, _, err := Get[DomainInfos](context.Background(), c.Client, fmt.Sprintf("/domain/v1/%v", id))
 	return data, err
 }
 
 // CreateDomain creates a new domain
 func (c *DomainService) CreateDomain(request CreateDomainRequest) error {
-	_, err := PostWithoutJsonResponse(c.Client, context.Background(), "/domain/v1", request)
+	_, err := PostWithoutJSONResponse(context.Background(), c.Client, "/domain/v1", request)
 	return err
 }

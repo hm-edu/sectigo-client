@@ -1,10 +1,11 @@
 package sectigo
 
 import (
-	"github.com/hm-edu/sectigo-client/sectigo/domain"
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/hm-edu/sectigo-client/sectigo/domain"
 
 	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"

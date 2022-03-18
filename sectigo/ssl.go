@@ -14,11 +14,11 @@ type SslService struct {
 	Client *Client
 }
 
-type SslJsonDate struct {
+type SslJSONDate struct {
 	time.Time
 }
 
-func (t *SslJsonDate) UnmarshalJSON(buf []byte) error {
+func (t *SslJSONDate) UnmarshalJSON(buf []byte) error {
 	val := strings.Trim(string(buf), `"`)
 	tt, err := time.Parse("01/02/2006", val)
 	if err != nil {
@@ -29,7 +29,7 @@ func (t *SslJsonDate) UnmarshalJSON(buf []byte) error {
 }
 
 type ListSslItem struct {
-	SslId                   int      `json:"sslId"`
+	SslID                   int      `json:"sslId"`
 	CommonName              string   `json:"commonName"`
 	SubjectAlternativeNames []string `json:"subjectAlternativeNames"`
 	SerialNumber            string   `json:"serialNumber"`
@@ -37,14 +37,14 @@ type ListSslItem struct {
 
 type SslDetails struct {
 	CommonName              string                `json:"commonName"`
-	SslId                   int                   `json:"sslId"`
-	Id                      int                   `json:"id"`
-	OrgId                   int                   `json:"orgId"`
+	SslID                   int                   `json:"sslId"`
+	ID                      int                   `json:"id"`
+	OrgID                   int                   `json:"orgId"`
 	Status                  ssl.CertificateStatus `json:"status"`
 	OrderNumber             int                   `json:"orderNumber"`
 	CertType                misc.CertType         `json:"certType"`
 	Term                    int                   `json:"term"`
-	Expires                 SslJsonDate           `json:"expires"`
+	Expires                 SslJSONDate           `json:"expires"`
 	SubjectAlternativeNames []string              `json:"subjectAlternativeNames"`
 	SerialNumber            string                `json:"serialNumber"`
 	CertificateDetails      SslCertificateDetails `json:"certificateDetails"`
@@ -60,7 +60,7 @@ type SslCertificateDetails struct {
 }
 
 type ListSslProfilesItem struct {
-	Id                  int                 `json:"id,omitempty"`
+	ID                  int                 `json:"id,omitempty"`
 	Name                string              `json:"name,omitempty"`
 	Description         string              `json:"description,omitempty"`
 	Terms               []int               `json:"terms,omitempty"`
@@ -73,23 +73,23 @@ type RevokeRequest struct {
 }
 
 func (c *SslService) List() (*[]ListSslItem, error) {
-	data, _, err := Get[[]ListSslItem](c.Client, context.Background(), "/ssl/v1")
+	data, _, err := Get[[]ListSslItem](context.Background(), c.Client, "/ssl/v1")
 	return data, err
 }
 
 func (c *SslService) Details(id int) (*SslDetails, error) {
-	data, _, err := Get[SslDetails](c.Client, context.Background(), fmt.Sprintf("/ssl/v1/%v", id))
+	data, _, err := Get[SslDetails](context.Background(), c.Client, fmt.Sprintf("/ssl/v1/%v", id))
 	return data, err
 }
 
 func (c *SslService) Revoke(serial, reason string) error {
-	_, err := PostWithoutJsonResponse(c.Client, context.Background(), fmt.Sprintf("/ssl/v1/revoke/serial/%v", serial), RevokeRequest{
+	_, err := PostWithoutJSONResponse(context.Background(), c.Client, fmt.Sprintf("/ssl/v1/revoke/serial/%v", serial), RevokeRequest{
 		Reason: reason,
 	})
 	return err
 }
 
 func (c *SslService) Profiles() (*[]ListSslProfilesItem, error) {
-	data, _, err := Get[[]ListSslProfilesItem](c.Client, context.Background(), "/ssl/v1/types")
+	data, _, err := Get[[]ListSslProfilesItem](context.Background(), c.Client, "/ssl/v1/types")
 	return data, err
 }

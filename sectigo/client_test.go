@@ -34,7 +34,7 @@ func TestClientService_Enroll(t *testing.T) {
 		return
 	}
 	assert.Nil(t, err)
-	assert.Equal(t, ClientEnrollmentResponse{OrderNumber: 123, BackendCertId: "123"}, *enroll)
+	assert.Equal(t, ClientEnrollmentResponse{OrderNumber: 123, BackendCertID: "123"}, *enroll)
 }
 
 func TestClientService_Profiles(t *testing.T) {

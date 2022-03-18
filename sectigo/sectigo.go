@@ -6,9 +6,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/rs/zerolog/log"
 	"io"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 )
 
 const (
@@ -18,7 +19,7 @@ const (
 type Client struct {
 	login       string
 	password    string
-	customerUri string
+	customerURI string
 
 	// httpClient is the underlying HTTP client used to communicate with the API.
 	httpClient *http.Client
@@ -36,8 +37,8 @@ type Client struct {
 	OrganizationService     *OrganizationService
 }
 
-func NewClient(httpClient *http.Client, login, password, customerUri string) *Client {
-	c := &Client{httpClient: httpClient, BaseURL: defaultBaseURL, login: login, password: password, customerUri: customerUri}
+func NewClient(httpClient *http.Client, login, password, customerURI string) *Client {
+	c := &Client{httpClient: httpClient, BaseURL: defaultBaseURL, login: login, password: password, customerURI: customerURI}
 	c.ClientService = &ClientService{Client: c}
 	c.DomainService = &DomainService{Client: c}
 	c.AcmeService = &AcmeService{Client: c}
@@ -48,29 +49,29 @@ func NewClient(httpClient *http.Client, login, password, customerUri string) *Cl
 	return c
 }
 
-func Get[T any](c *Client, ctx context.Context, path string) (*T, *http.Response, error) {
-	return makeRequest[T](c, ctx, http.MethodGet, path, nil, true)
+func Get[T any](ctx context.Context, c *Client, path string) (*T, *http.Response, error) {
+	return makeRequest[T](ctx, c, http.MethodGet, path, nil, true)
 }
 
-func GetWithoutJsonResponse(c *Client, ctx context.Context, path string) (*http.Response, error) {
-	_, resp, err := makeRequest[any](c, ctx, http.MethodGet, path, nil, false)
+func GetWithoutJSONResponse(ctx context.Context, c *Client, path string) (*http.Response, error) {
+	_, resp, err := makeRequest[any](ctx, c, http.MethodGet, path, nil, false)
 	return resp, err
 }
-func Post[T any](c *Client, ctx context.Context, path string, payload interface{}) (*T, *http.Response, error) {
-	return makeRequest[T](c, ctx, http.MethodPost, path, payload, true)
+func Post[T any](ctx context.Context, c *Client, path string, payload interface{}) (*T, *http.Response, error) {
+	return makeRequest[T](ctx, c, http.MethodPost, path, payload, true)
 }
 
-func PostWithoutJsonResponse(c *Client, ctx context.Context, path string, payload interface{}) (*http.Response, error) {
-	_, resp, err := makeRequest[any](c, ctx, http.MethodPost, path, payload, false)
-	return resp, err
-}
-
-func Delete(c *Client, ctx context.Context, path string) (*http.Response, error) {
-	_, resp, err := makeRequest[any](c, ctx, http.MethodDelete, path, nil, false)
+func PostWithoutJSONResponse(ctx context.Context, c *Client, path string, payload interface{}) (*http.Response, error) {
+	_, resp, err := makeRequest[any](ctx, c, http.MethodPost, path, payload, false)
 	return resp, err
 }
 
-func sendRequestAndParse[T any](c *Client, ctx context.Context, req *http.Request, response bool) (*T, *http.Response, error) {
+func Delete(ctx context.Context, c *Client, path string) (*http.Response, error) {
+	_, resp, err := makeRequest[any](ctx, c, http.MethodDelete, path, nil, false)
+	return resp, err
+}
+
+func sendRequestAndParse[T any](ctx context.Context, c *Client, req *http.Request, response bool) (*T, *http.Response, error) {
 	if ctx == nil {
 		return nil, nil, errors.New("context must be non-nil")
 	}
@@ -138,7 +139,7 @@ func checkResponse(resp *http.Response) error {
 }
 
 // makeRequest executes an API request and returns the HTTP response.
-func makeRequest[T any](c *Client, ctx context.Context, method, path string, payload interface{}, response bool) (*T, *http.Response, error) {
+func makeRequest[T any](ctx context.Context, c *Client, method, path string, payload interface{}, response bool) (*T, *http.Response, error) {
 	req, err := c.buildRequest(method, path, payload)
 	if err != nil {
 		return nil, nil, err
@@ -148,7 +149,7 @@ func makeRequest[T any](c *Client, ctx context.Context, method, path string, pay
 		log.Printf("Request (%v): %#v", req.URL, req)
 	}
 
-	obj, resp, err := sendRequestAndParse[T](c, ctx, req, response)
+	obj, resp, err := sendRequestAndParse[T](ctx, c, req, response)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -181,6 +182,6 @@ func (c *Client) buildRequest(method, path string, payload interface{}) (*http.R
 	req.Header.Add("Accept", "application/json")
 	req.Header.Set("login", c.login)
 	req.Header.Set("password", c.password)
-	req.Header.Set("customerUri", c.customerUri)
+	req.Header.Set("customerUri", c.customerURI)
 	return req, err
 }

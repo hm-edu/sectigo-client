@@ -1,0 +1,20 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+      - id: check-byte-order-marker
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-yaml
+      - id: check-toml
+      - id: end-of-file-fixer
+        exclude_types:
+          - rust # Rust files get formated by cargo fmt
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+
+  - repo: https://github.com/pre-commit/pre-commit
+    rev: v2.17.0
+    hooks:
+      - id: validate_manifest

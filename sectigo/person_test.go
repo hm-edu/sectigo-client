@@ -1,11 +1,12 @@
 package sectigo
 
 import (
-	"github.com/rs/zerolog/log"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"strconv"
 	"testing"
+
+	"github.com/rs/zerolog/log"
+	"github.com/stretchr/testify/assert"
 
 	"github.com/jarcoal/httpmock"
 )
@@ -70,7 +71,7 @@ func TestPersonService_ListFiltered(t *testing.T) {
 	httpmock.RegisterResponder("GET", "https://cert-manager.com/api/person/v1?organizationId=3105", httpmock.NewStringResponder(200, `[{"id":301,"firstName":"Tester","middleName":"","lastName":"","email":"18259_nobody@nobody.comodo.od.ua","organizationId":3105,"validationType":"STANDARD","phone":"123456789","secondaryEmails":["321nobody@nobody.comodo.od.ua","100500admin@nobody.comodo.od.ua"],"commonName":"Tester","eppn":"","upn":""}]`))
 
 	c := NewClient(http.DefaultClient, "", "", "")
-	list, err := c.PersonService.List(&ListPersonRequest{OrganizationId: 3105})
+	list, err := c.PersonService.List(&ListPersonRequest{OrganizationID: 3105})
 	assert.Nil(t, err)
 	assert.Equal(t, 1, httpmock.GetTotalCallCount())
 	assert.Len(t, *list, 1)

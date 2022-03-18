@@ -3,6 +3,7 @@ package sectigo
 import (
 	"context"
 	"fmt"
+
 	"github.com/google/go-querystring/query"
 )
 
@@ -14,7 +15,7 @@ type CreatePersonRequest struct {
 	MiddleName      string   `json:"middleName"`
 	LastName        string   `json:"lastName"`
 	Email           string   `json:"email"`
-	OrganizationId  int      `json:"organizationId"`
+	OrganizationID  int      `json:"organizationId"`
 	ValidationType  string   `json:"validationType"`
 	Phone           string   `json:"phone"`
 	SecondaryEmails []string `json:"secondaryEmails"`
@@ -31,16 +32,16 @@ type ListPersonRequest struct {
 	CommonName     string `url:"commonName,omitempty"`
 	Phone          string `url:"phone,omitempty"`
 	SecondaryEmail string `url:"secondaryEmail,omitempty"`
-	OrganizationId int    `url:"organizationId,omitempty"`
+	OrganizationID int    `url:"organizationId,omitempty"`
 }
 
 type ListPersonItem struct {
-	Id              int      `json:"id"`
+	ID              int      `json:"id"`
 	FirstName       string   `json:"firstName"`
 	MiddleName      string   `json:"middleName"`
 	LastName        string   `json:"lastName"`
 	Email           string   `json:"email"`
-	OrganizationId  int      `json:"organizationId"`
+	OrganizationID  int      `json:"organizationId"`
 	ValidationType  string   `json:"validationType"`
 	Phone           string   `json:"phone"`
 	SecondaryEmails []string `json:"secondaryEmails"`
@@ -54,17 +55,17 @@ func (c *PersonService) List(q *ListPersonRequest) (*[]ListPersonItem, error) {
 	if err != nil {
 		return nil, err
 	}
-	data, _, err := Get[[]ListPersonItem](c.Client, context.Background(), fmt.Sprintf("/person/v1%v", params))
+	data, _, err := Get[[]ListPersonItem](context.Background(), c.Client, fmt.Sprintf("/person/v1%v", params))
 	return data, err
 }
 
 func (c *PersonService) CreatePerson(q CreatePersonRequest) error {
-	_, err := PostWithoutJsonResponse(c.Client, context.Background(), "/person/v1", q)
+	_, err := PostWithoutJSONResponse(context.Background(), c.Client, "/person/v1", q)
 	return err
 }
 
 func (c *PersonService) DeletePerson(id int) error {
-	_, err := Delete(c.Client, context.Background(), fmt.Sprintf("/person/v1/%v", id))
+	_, err := Delete(context.Background(), c.Client, fmt.Sprintf("/person/v1/%v", id))
 	return err
 }
 
