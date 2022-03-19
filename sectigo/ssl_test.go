@@ -23,7 +23,6 @@ func TestSslService_Revoke(t *testing.T) {
 	}))
 
 	c := NewClient(http.DefaultClient, "", "", "")
-	c.Debug = true
 	err := c.SslService.Revoke("1234", "test")
 	assert.Nil(t, err)
 }

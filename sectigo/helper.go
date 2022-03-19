@@ -2,18 +2,22 @@ package sectigo
 
 import (
 	"fmt"
-	"github.com/google/go-querystring/query"
 	"io"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/google/go-querystring/query"
 )
 
-type JsonDate struct {
+// JSONDate is a wrapper around the time struct with a customized implementation of the json.Unmarshaler interface.
+type JSONDate struct {
 	time.Time
 }
 
-func (t *JsonDate) UnmarshalJSON(buf []byte) error {
+// UnmarshalJSON implements the json.Unmarshaler interface.
+// The time is expected to be a quoted string in the format YYYY-MM-DD.
+func (t *JSONDate) UnmarshalJSON(buf []byte) error {
 	val := strings.Trim(string(buf), `"`)
 	tt, err := time.Parse("2006-01-02", val)
 	if err != nil {

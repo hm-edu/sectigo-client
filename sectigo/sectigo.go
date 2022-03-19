@@ -16,6 +16,7 @@ const (
 	defaultBaseURL = "https://cert-manager.com/api"
 )
 
+// Client is the main wrapper around the different sectigo services.
 type Client struct {
 	login       string
 	password    string
@@ -27,7 +28,6 @@ type Client struct {
 	// BaseURL for API requests.
 	BaseURL string
 
-	Debug                   bool
 	ClientService           *ClientService
 	DomainService           *DomainService
 	AcmeService             *AcmeService
@@ -37,6 +37,7 @@ type Client struct {
 	OrganizationService     *OrganizationService
 }
 
+// NewClient creates a new client against the sectigo API using the provided credentials and the http.Client.
 func NewClient(httpClient *http.Client, login, password, customerURI string) *Client {
 	c := &Client{httpClient: httpClient, BaseURL: defaultBaseURL, login: login, password: password, customerURI: customerURI}
 	c.ClientService = &ClientService{Client: c}
@@ -49,23 +50,32 @@ func NewClient(httpClient *http.Client, login, password, customerURI string) *Cl
 	return c
 }
 
+// Get executes a GET-Requests and deserializes the returned JSON information using the provided type.
 func Get[T any](ctx context.Context, c *Client, path string) (*T, *http.Response, error) {
 	return makeRequest[T](ctx, c, http.MethodGet, path, nil, true)
 }
 
+// GetWithoutJSONResponse executes a GET-Request without expecting a JSON response.
+// Custom handling of the response can be done using the returned http.Response.
 func GetWithoutJSONResponse(ctx context.Context, c *Client, path string) (*http.Response, error) {
 	_, resp, err := makeRequest[any](ctx, c, http.MethodGet, path, nil, false)
 	return resp, err
 }
+
+// Post executes a POST-Requests and deserializes the returned JSON information using the provided type.
 func Post[T any](ctx context.Context, c *Client, path string, payload interface{}) (*T, *http.Response, error) {
 	return makeRequest[T](ctx, c, http.MethodPost, path, payload, true)
 }
 
+// PostWithoutJSONResponse executes a POST-Request without expecting a JSON response.
+// Custom handling of the response can be done using the returned http.Response.
 func PostWithoutJSONResponse(ctx context.Context, c *Client, path string, payload interface{}) (*http.Response, error) {
 	_, resp, err := makeRequest[any](ctx, c, http.MethodPost, path, payload, false)
 	return resp, err
 }
 
+// Delete executes a DELETE-Request without expecting a JSON response.
+// Custom handling of the response can be done using the returned http.Response.
 func Delete(ctx context.Context, c *Client, path string) (*http.Response, error) {
 	_, resp, err := makeRequest[any](ctx, c, http.MethodDelete, path, nil, false)
 	return resp, err
@@ -101,14 +111,16 @@ func sendRequestAndParse[T any](ctx context.Context, c *Client, req *http.Reques
 	return obj, resp, err
 }
 
+// Response is a wrapper around the normal http.Response.
 type Response struct {
-	// HTTP response
+	// HTTP response.
 	HTTPResponse *http.Response
 }
 
+// ErrorResponse provides the error information returned by sectigo.
 type ErrorResponse struct {
 	Response
-	// human-readable message
+	// human-readable message.
 	Code        int    `json:"code,omitempty"`
 	Description string `json:"description,omitempty"`
 }
@@ -147,18 +159,14 @@ func makeRequest[T any](ctx context.Context, c *Client, method, path string, pay
 		return nil, nil, err
 	}
 
-	if c.Debug {
-		log.Debug().Msgf("Request (%v): %#v", req.URL, req)
-	}
+	log.Debug().Msgf("Request (%v): %#v", req.URL, req)
 
 	obj, resp, err := sendRequestAndParse[T](ctx, c, req, response)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	if c.Debug {
-		log.Debug().Msgf("Response: %#v", resp)
-	}
+	log.Debug().Msgf("Response: %#v", resp)
 
 	return obj, resp, nil
 }

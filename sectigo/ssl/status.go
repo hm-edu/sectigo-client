@@ -1,19 +1,33 @@
 package ssl
 
+// CertificateStatus represents the status of a SSL certificate.
 type CertificateStatus string
 
 const (
-	Invalid    CertificateStatus = "Invalid"
-	Requested  CertificateStatus = "Requested"
-	Approved   CertificateStatus = "Approved"
-	Declined   CertificateStatus = "Declined"
-	Applied    CertificateStatus = "Applied"
-	Issued     CertificateStatus = "Issued"
-	Revoked    CertificateStatus = "Revoked"
-	Expired    CertificateStatus = "Expired"
-	Replaced   CertificateStatus = "Replaced"
-	Rejected   CertificateStatus = "Rejected"
-	Unmanaged  CertificateStatus = "Unmanaged"
+	// Invalid certificate state.
+	Invalid CertificateStatus = "Invalid"
+	// Requested certificate state.
+	Requested CertificateStatus = "Requested"
+	// Approved certificate state.
+	Approved CertificateStatus = "Approved"
+	// Declined certificate state.
+	Declined CertificateStatus = "Declined"
+	// Applied certificate state.
+	Applied CertificateStatus = "Applied"
+	// Issued certificate state.
+	Issued CertificateStatus = "Issued"
+	// Revoked certificate state.
+	Revoked CertificateStatus = "Revoked"
+	// Expired certificate state.
+	Expired CertificateStatus = "Expired"
+	// Replaced certificate state.
+	Replaced CertificateStatus = "Replaced"
+	// Rejected certificate state.
+	Rejected CertificateStatus = "Rejected"
+	// Unmanaged certificate state.
+	Unmanaged CertificateStatus = "Unmanaged"
+	// SAApproved certificate state.
 	SAApproved CertificateStatus = "SAApproved"
-	Init       CertificateStatus = "Init"
+	// Init certificate state.
+	Init CertificateStatus = "Init"
 )

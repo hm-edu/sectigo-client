@@ -36,7 +36,7 @@ func Test_StringFromResponse(t *testing.T) {
 }
 
 func TestJsonDate_UnmarshalJSON(t *testing.T) {
-	d := JsonDate{}
+	d := JSONDate{}
 
 	err := json.NewDecoder(strings.NewReader("1.1.2022")).Decode(&d)
 	assert.NotNil(t, err)

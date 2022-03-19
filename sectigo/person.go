@@ -5,9 +5,12 @@ import (
 	"fmt"
 )
 
+// PersonService provides some methods handling sectigo person actions.
 type PersonService struct {
 	Client *Client
 }
+
+// CreatePersonRequest represents the information required for creating a new person.
 type CreatePersonRequest struct {
 	FirstName       string   `json:"firstName"`
 	MiddleName      string   `json:"middleName"`
@@ -22,6 +25,7 @@ type CreatePersonRequest struct {
 	Upn             string   `json:"upn"`
 }
 
+// ListPersonRequest provides the possible filters that can be passed to the PersonService.List method.
 type ListPersonRequest struct {
 	Position       int    `url:"position,omitempty"`
 	Size           int    `url:"size,omitempty"`
@@ -33,6 +37,7 @@ type ListPersonRequest struct {
 	OrganizationID int    `url:"organizationId,omitempty"`
 }
 
+// ListPersonItem represents a single item returned by the PersonService.List method.
 type ListPersonItem struct {
 	ID              int      `json:"id"`
 	FirstName       string   `json:"firstName"`
@@ -48,6 +53,7 @@ type ListPersonItem struct {
 	Upn             string   `json:"upn"`
 }
 
+// List enumerates all persons using the provided (optional) filters.
 func (c *PersonService) List(q *ListPersonRequest) (*[]ListPersonItem, error) {
 	params, err := formatParams(q)
 	if err != nil {
@@ -57,11 +63,13 @@ func (c *PersonService) List(q *ListPersonRequest) (*[]ListPersonItem, error) {
 	return data, err
 }
 
+// CreatePerson creates a new person using the provided information.
 func (c *PersonService) CreatePerson(q CreatePersonRequest) error {
 	_, err := PostWithoutJSONResponse(context.Background(), c.Client, "/person/v1", q)
 	return err
 }
 
+// DeletePerson deletes a person using the provided id.
 func (c *PersonService) DeletePerson(id int) error {
 	_, err := Delete(context.Background(), c.Client, fmt.Sprintf("/person/v1/%v", id))
 	return err
