@@ -139,6 +139,9 @@ func checkResponse(resp *http.Response) error {
 
 // makeRequest executes an API request and returns the HTTP response.
 func makeRequest[T any](ctx context.Context, c *Client, method, path string, payload interface{}, response bool) (*T, *http.Response, error) {
+	if c == nil {
+		return nil, nil, fmt.Errorf("no client passed")
+	}
 	req, err := c.buildRequest(method, path, payload)
 	if err != nil {
 		return nil, nil, err
