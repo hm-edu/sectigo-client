@@ -2,11 +2,12 @@ package sectigo
 
 import (
 	"fmt"
-	"github.com/hm-edu/sectigo-client/sectigo/dcv"
-	"github.com/hm-edu/sectigo-client/sectigo/misc"
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/hm-edu/sectigo-client/sectigo/dcv"
+	"github.com/hm-edu/sectigo-client/sectigo/misc"
 
 	"github.com/hm-edu/sectigo-client/sectigo/domain"
 
@@ -32,7 +33,7 @@ func TestDomainValidationService_List(t *testing.T) {
 	c := NewClient(http.DefaultClient, "", "", "")
 	validation, err := c.DomainValidationService.List()
 	assert.Nil(t, err)
-	assert.Equal(t, dcv.ListItem{Domain: "ccmqa.com", DCVStatus: domain.Validated, DCVOrderStatus: dcv.NotInitiated, ExpirationDate: misc.JSONDate{time.Date(2022, time.January, 22, 0, 0, 0, 0, time.UTC)}, DCVMethod: "EMAIL"}, (*validation)[0])
+	assert.Equal(t, dcv.ListItem{Domain: "ccmqa.com", DCVStatus: domain.Validated, DCVOrderStatus: dcv.NotInitiated, ExpirationDate: misc.JSONDate{Time: time.Date(2022, time.January, 22, 0, 0, 0, 0, time.UTC)}, DCVMethod: "EMAIL"}, (*validation)[0])
 }
 
 func TestDomainValidationService_Status(t *testing.T) {
