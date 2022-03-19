@@ -3,8 +3,6 @@ package sectigo
 import (
 	"context"
 	"fmt"
-
-	"github.com/google/go-querystring/query"
 )
 
 type PersonService struct {
@@ -67,16 +65,4 @@ func (c *PersonService) CreatePerson(q CreatePersonRequest) error {
 func (c *PersonService) DeletePerson(id int) error {
 	_, err := Delete(context.Background(), c.Client, fmt.Sprintf("/person/v1/%v", id))
 	return err
-}
-
-func formatParams[T any](q *T) (string, error) {
-	params := ""
-	if q != nil {
-		values, err := query.Values(q)
-		if err != nil {
-			return "", err
-		}
-		params = fmt.Sprintf("?%v", values.Encode())
-	}
-	return params, nil
 }

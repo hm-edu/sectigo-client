@@ -3,28 +3,9 @@ package sectigo
 import (
 	"context"
 	"fmt"
-	"io"
-	"net/url"
-	"strings"
-	"time"
-
 	"github.com/hm-edu/sectigo-client/sectigo/client"
-	"github.com/rs/zerolog/log"
+	"net/url"
 )
-
-type JsonDate struct {
-	time.Time
-}
-
-func (t *JsonDate) UnmarshalJSON(buf []byte) error {
-	val := strings.Trim(string(buf), `"`)
-	tt, err := time.Parse("2006-01-02", val)
-	if err != nil {
-		return err
-	}
-	t.Time = tt
-	return nil
-}
 
 type ClientService struct {
 	Client *Client
@@ -130,20 +111,6 @@ func (c *ClientService) RevokeByEmail(req RevokeByEmailRequest) error {
 // Collect downloads the certificate for the given id
 func (c *ClientService) Collect(id int) (*string, error) {
 	resp, err := GetWithoutJSONResponse(context.Background(), c.Client, fmt.Sprintf("/smime/v1/collect/%v?format=x509", id))
-	if err != nil {
-		return nil, err
-	}
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-			log.Warn().Err(err)
-		}
-	}(resp.Body)
-	bodyBytes, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Warn().Err(err)
-		return nil, err
-	}
-	bodyString := string(bodyBytes)
-	return &bodyString, err
+	bodyString, err := stringFromResponse(err, resp)
+	return bodyString, err
 }

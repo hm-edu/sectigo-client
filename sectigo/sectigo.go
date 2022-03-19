@@ -91,10 +91,7 @@ func sendRequestAndParse[T any](ctx context.Context, c *Client, req *http.Reques
 	}
 
 	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-			log.Warn().Err(err)
-		}
+		_ = Body.Close()
 	}(resp.Body)
 	obj := new(T)
 	if obj != nil {
@@ -125,7 +122,9 @@ func checkResponse(resp *http.Response) error {
 	if code := resp.StatusCode; 200 <= code && code <= 299 {
 		return nil
 	}
-
+	defer func(Body io.ReadCloser) {
+		_ = Body.Close()
+	}(resp.Body)
 	errorResponse := &ErrorResponse{Response: Response{
 		HTTPResponse: resp,
 	}}
@@ -146,7 +145,7 @@ func makeRequest[T any](ctx context.Context, c *Client, method, path string, pay
 	}
 
 	if c.Debug {
-		log.Printf("Request (%v): %#v", req.URL, req)
+		log.Debug().Msgf("Request (%v): %#v", req.URL, req)
 	}
 
 	obj, resp, err := sendRequestAndParse[T](ctx, c, req, response)
@@ -155,7 +154,7 @@ func makeRequest[T any](ctx context.Context, c *Client, method, path string, pay
 	}
 
 	if c.Debug {
-		log.Printf("Response: %#v", resp)
+		log.Debug().Msgf("Response: %#v", resp)
 	}
 
 	return obj, resp, nil

@@ -1,6 +1,7 @@
 package sectigo
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
 	"time"
@@ -11,6 +12,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestDomainValidationService_NoPermission(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	httpmock.RegisterResponder("GET", "https://cert-manager.com/api/dcv/v1/validation", httpmock.NewStringResponder(400, `{"code":-3,"description":"You are not authorized to perform DCV validation."}`))
+
+	c := NewClient(http.DefaultClient, "", "", "")
+	validation, err := c.DomainValidationService.List()
+	assert.Nil(t, validation)
+	assert.Equal(t, "GET https://cert-manager.com/api/dcv/v1/validation: 400 -3 You are not authorized to perform DCV validation.", fmt.Sprintf("%v", err))
+}
 func TestDomainValidationService_List(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
