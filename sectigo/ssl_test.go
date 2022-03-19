@@ -52,7 +52,7 @@ func TestSslService_List(t *testing.T) {
 }
 
 func TestSslService_Details(t *testing.T) {
-	x := SslCertificateDetails{
+	x := ssl.CertificateDetails{
 		Issuer:                  "CN=Sectigo RSA Organization Validation Secure Server CA,O=Sectigo Limited,L=Salford,ST=Greater Manchester,C=GB",
 		Subject:                 "CN=dev.dummy.edu,O=Dummy Hochschule,ST=Bayern,C=DE",
 		SubjectAlternativeNames: "dNSName=dev.dummy.edu, dNSName=www.dev.dummy.edu",

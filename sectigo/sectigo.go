@@ -30,9 +30,9 @@ type Client struct {
 
 	ClientService           *ClientService
 	DomainService           *DomainService
-	AcmeService             *AcmeService
+	AcmeService             *ACMEService
 	DomainValidationService *DomainValidationService
-	SslService              *SslService
+	SslService              *SSLService
 	PersonService           *PersonService
 	OrganizationService     *OrganizationService
 }
@@ -42,9 +42,9 @@ func NewClient(httpClient *http.Client, login, password, customerURI string) *Cl
 	c := &Client{httpClient: httpClient, BaseURL: defaultBaseURL, login: login, password: password, customerURI: customerURI}
 	c.ClientService = &ClientService{Client: c}
 	c.DomainService = &DomainService{Client: c}
-	c.AcmeService = &AcmeService{Client: c}
+	c.AcmeService = &ACMEService{Client: c}
 	c.DomainValidationService = &DomainValidationService{Client: c}
-	c.SslService = &SslService{Client: c}
+	c.SslService = &SSLService{Client: c}
 	c.PersonService = &PersonService{Client: c}
 	c.OrganizationService = &OrganizationService{Client: c}
 	return c
@@ -74,9 +74,15 @@ func PostWithoutJSONResponse(ctx context.Context, c *Client, path string, payloa
 	return resp, err
 }
 
-// Delete executes a DELETE-Request without expecting a JSON response.
+// Delete executes a DELETE-Request and deserializes the returned JSON information using the provided type.
+func Delete[T any](ctx context.Context, c *Client, path string, payload interface{}) (*T, *http.Response, error) {
+	data, resp, err := makeRequest[T](ctx, c, http.MethodDelete, path, payload, true)
+	return data, resp, err
+}
+
+// DeleteWithoutJSONResponse executes a DELETE-Request without expecting a JSON response.
 // Custom handling of the response can be done using the returned http.Response.
-func Delete(ctx context.Context, c *Client, path string) (*http.Response, error) {
+func DeleteWithoutJSONResponse(ctx context.Context, c *Client, path string) (*http.Response, error) {
 	_, resp, err := makeRequest[any](ctx, c, http.MethodDelete, path, nil, false)
 	return resp, err
 }

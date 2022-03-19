@@ -3,16 +3,18 @@ package sectigo
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/stretchr/testify/assert"
+	"github.com/hm-edu/sectigo-client/sectigo/misc"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_formatParams(t *testing.T) {
 	i := 42
-	val, err := formatParams[int](&i)
+	val, err := formatParams(&i)
 	assert.Equal(t, "", val)
 	assert.NotNil(t, err)
 }
@@ -36,7 +38,7 @@ func Test_StringFromResponse(t *testing.T) {
 }
 
 func TestJsonDate_UnmarshalJSON(t *testing.T) {
-	d := JSONDate{}
+	d := misc.JSONDate{}
 
 	err := json.NewDecoder(strings.NewReader("1.1.2022")).Decode(&d)
 	assert.NotNil(t, err)

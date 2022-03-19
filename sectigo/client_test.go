@@ -1,6 +1,7 @@
 package sectigo
 
 import (
+	"github.com/hm-edu/sectigo-client/sectigo/client"
 	"net/http"
 	"strconv"
 	"testing"
@@ -20,7 +21,7 @@ func TestClientService_RevokeByEmail(t *testing.T) {
 	}))
 
 	c := NewClient(http.DefaultClient, "", "", "")
-	err := c.ClientService.RevokeByEmail(RevokeByEmailRequest{Email: "test@online.de", Reason: "Compromised"})
+	err := c.ClientService.RevokeByEmail(client.RevokeByEmailRequest{Email: "test@online.de", Reason: "Compromised"})
 	assert.Nil(t, err)
 }
 
@@ -29,12 +30,12 @@ func TestClientService_Enroll(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 	httpmock.RegisterResponder("POST", "https://cert-manager.com/api/smime/v1/enroll", httpmock.NewStringResponder(200, `{"orderNumber":123,"backendCertId":"123"}`))
 	c := NewClient(http.DefaultClient, "", "", "")
-	enroll, err := c.ClientService.Enroll(ClientEnrollmentRequest{})
+	enroll, err := c.ClientService.Enroll(client.EnrollmentRequest{})
 	if err != nil {
 		return
 	}
 	assert.Nil(t, err)
-	assert.Equal(t, ClientEnrollmentResponse{OrderNumber: 123, BackendCertID: "123"}, *enroll)
+	assert.Equal(t, client.EnrollmentResponse{OrderNumber: 123, BackendCertID: "123"}, *enroll)
 }
 
 func TestClientService_Profiles(t *testing.T) {
@@ -90,7 +91,7 @@ func TestClientService_ListFiltered(t *testing.T) {
 	httpmock.RegisterResponder("GET", "https://cert-manager.com/api/smime/v2?email=foobar%40test.de", httpmock.NewStringResponder(200, `[{"id":1,"state":"issued","certificateDetails":{"subject":"S/MIME Subject string"},"serialNumber":"C3:DB:6F:88:E7:20:DF:99:71:70:59:FB:D0:2D:29:B0","orderNumber":12345,"backendCertId":"12345","expires":"2345-06-07"}]`))
 
 	c := NewClient(http.DefaultClient, "", "", "")
-	list, err := c.ClientService.List(&ListClientRequest{Email: "foobar@test.de"})
+	list, err := c.ClientService.List(&client.ListClientRequest{Email: "foobar@test.de"})
 	assert.Nil(t, err)
 	assert.Equal(t, 1, httpmock.GetTotalCallCount())
 	assert.Len(t, *list, 1)

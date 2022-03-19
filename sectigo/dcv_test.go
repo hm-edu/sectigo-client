@@ -2,6 +2,8 @@ package sectigo
 
 import (
 	"fmt"
+	"github.com/hm-edu/sectigo-client/sectigo/dcv"
+	"github.com/hm-edu/sectigo-client/sectigo/misc"
 	"net/http"
 	"testing"
 	"time"
@@ -30,7 +32,7 @@ func TestDomainValidationService_List(t *testing.T) {
 	c := NewClient(http.DefaultClient, "", "", "")
 	validation, err := c.DomainValidationService.List()
 	assert.Nil(t, err)
-	assert.Equal(t, ListDCVItem{Domain: "ccmqa.com", DCVStatus: domain.Validated, DCVOrderStatus: NotInitiated, ExpirationDate: JSONDate{time.Date(2022, time.January, 22, 0, 0, 0, 0, time.UTC)}, DCVMethod: "EMAIL"}, (*validation)[0])
+	assert.Equal(t, dcv.ListItem{Domain: "ccmqa.com", DCVStatus: domain.Validated, DCVOrderStatus: dcv.NotInitiated, ExpirationDate: misc.JSONDate{time.Date(2022, time.January, 22, 0, 0, 0, 0, time.UTC)}, DCVMethod: "EMAIL"}, (*validation)[0])
 }
 
 func TestDomainValidationService_Status(t *testing.T) {
@@ -41,7 +43,7 @@ func TestDomainValidationService_Status(t *testing.T) {
 	c := NewClient(http.DefaultClient, "", "", "")
 	validation, err := c.DomainValidationService.Status("ccmdev.com")
 	assert.Nil(t, err)
-	assert.Equal(t, StatusResponse{Status: domain.Expired, OrderStatus: Submitted, ExpirationDate: JSONDate{time.Date(2022, time.January, 20, 0, 0, 0, 0, time.UTC)}}, *validation)
+	assert.Equal(t, dcv.StatusResponse{Status: domain.Expired, OrderStatus: dcv.Submitted, ExpirationDate: misc.JSONDate{Time: time.Date(2022, time.January, 20, 0, 0, 0, 0, time.UTC)}}, *validation)
 }
 
 func TestDomainValidationService_StartCname(t *testing.T) {
@@ -52,7 +54,7 @@ func TestDomainValidationService_StartCname(t *testing.T) {
 	c := NewClient(http.DefaultClient, "", "", "")
 	data, err := c.DomainValidationService.StartCNAME("ccmdev.com")
 	assert.Nil(t, err)
-	assert.Equal(t, StartCNAMEResponse{Host: "_fc69541f3cb60467c4cf674225e89931.ccmqa.com.", Point: "2e48bb4e8a04ec6ff6396052bfa7e3df.7756667c4e96769d2101d67de72584dd.sectigo.com."}, *data)
+	assert.Equal(t, dcv.StartCNAMEResponse{Host: "_fc69541f3cb60467c4cf674225e89931.ccmqa.com.", Point: "2e48bb4e8a04ec6ff6396052bfa7e3df.7756667c4e96769d2101d67de72584dd.sectigo.com."}, *data)
 }
 
 func TestDomainValidationService_SubmitCname(t *testing.T) {
@@ -63,6 +65,6 @@ func TestDomainValidationService_SubmitCname(t *testing.T) {
 	c := NewClient(http.DefaultClient, "", "", "")
 	data, err := c.DomainValidationService.SubmitCNAME("ccmdev.com")
 	assert.Nil(t, err)
-	assert.Equal(t, SubmitCNAMEResponse{Status: domain.Validated, OrderStatus: Submitted, Message: "Submitted successfully"}, *data)
+	assert.Equal(t, dcv.SubmitCNAMEResponse{Status: domain.Validated, OrderStatus: dcv.Submitted, Message: "Submitted successfully"}, *data)
 
 }
