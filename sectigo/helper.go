@@ -2,9 +2,10 @@ package sectigo
 
 import (
 	"fmt"
-	"github.com/google/go-querystring/query"
 	"io"
 	"net/http"
+
+	"github.com/google/go-querystring/query"
 )
 
 func stringFromResponse(err error, resp *http.Response) (*string, error) {

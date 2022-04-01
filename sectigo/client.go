@@ -3,8 +3,9 @@ package sectigo
 import (
 	"context"
 	"fmt"
-	"github.com/hm-edu/sectigo-client/sectigo/client"
 	"net/url"
+
+	"github.com/hm-edu/sectigo-client/sectigo/client"
 )
 
 // ClientService provides some methods handling sectigo client certificate actions.

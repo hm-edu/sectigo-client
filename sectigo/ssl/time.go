@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// JSONDate is a wrapper arround the time struct with a customized implementation of the json.Unmarshaler interface.
+// JSONDate is a wrapper around the time struct with a customized implementation of the json.Unmarshaler interface.
 type JSONDate struct {
 	time.Time
 }

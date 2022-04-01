@@ -3,6 +3,7 @@ package sectigo
 import (
 	"context"
 	"fmt"
+
 	"github.com/hm-edu/sectigo-client/sectigo/person"
 )
 

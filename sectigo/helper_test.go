@@ -3,11 +3,12 @@ package sectigo
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/hm-edu/sectigo-client/sectigo/misc"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
+
+	"github.com/hm-edu/sectigo-client/sectigo/misc"
 
 	"github.com/stretchr/testify/assert"
 )
