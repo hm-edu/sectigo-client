@@ -3,6 +3,23 @@ run:
 linters:
   enable:
     - revive
+    - bodyclose
+    - deadcode
+    - errcheck
+    - gofmt
+    - goimports
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - misspell
+    - prealloc
+    - staticcheck
+    - structcheck
+    - typecheck
+    - unconvert
+    - unused
+    - varcheck
 issues:
   exclude-use-default: false
 linters-settings:

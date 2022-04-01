@@ -2,23 +2,27 @@ package sectigo
 
 import (
 	"context"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"go.uber.org/zap"
 )
 
 func Test_Get(t *testing.T) {
 	resp, err := GetWithoutJSONResponse(nil, nil, "")
 	assert.Nil(t, resp)
 	assert.NotNil(t, err)
-	resp, err = GetWithoutJSONResponse(nil, NewClient(nil, "", "", ""), "")
+	logger, _ := zap.NewProduction()
+	resp, err = GetWithoutJSONResponse(nil, NewClient(nil, logger, "", "", ""), "")
 	assert.Nil(t, resp)
 	assert.NotNil(t, err)
 }
 
 func Test_Post(t *testing.T) {
 	value := make(chan int)
-	resp, err := PostWithoutJSONResponse(context.Background(), NewClient(http.DefaultClient, "", "", ""), "", value)
+	logger, _ := zap.NewProduction()
+	resp, err := PostWithoutJSONResponse(context.Background(), NewClient(http.DefaultClient, logger, "", "", ""), "", value)
 	assert.Nil(t, resp)
 	assert.NotNil(t, err)
 }

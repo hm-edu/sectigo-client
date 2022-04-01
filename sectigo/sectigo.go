@@ -9,7 +9,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/rs/zerolog/log"
+	"go.uber.org/zap"
 )
 
 const (
@@ -21,6 +21,7 @@ type Client struct {
 	login       string
 	password    string
 	customerURI string
+	logger      *zap.Logger
 
 	// httpClient is the underlying HTTP client used to communicate with the API.
 	httpClient *http.Client
@@ -38,8 +39,8 @@ type Client struct {
 }
 
 // NewClient creates a new client against the sectigo API using the provided credentials and the http.Client.
-func NewClient(httpClient *http.Client, login, password, customerURI string) *Client {
-	c := &Client{httpClient: httpClient, BaseURL: defaultBaseURL, login: login, password: password, customerURI: customerURI}
+func NewClient(httpClient *http.Client, logger *zap.Logger, login, password, customerURI string) *Client {
+	c := &Client{httpClient: httpClient, BaseURL: defaultBaseURL, login: login, password: password, customerURI: customerURI, logger: logger}
 	c.ClientService = &ClientService{Client: c}
 	c.DomainService = &DomainService{Client: c}
 	c.AcmeService = &ACMEService{Client: c}
@@ -165,14 +166,14 @@ func makeRequest[T any](ctx context.Context, c *Client, method, path string, pay
 		return nil, nil, err
 	}
 
-	log.Debug().Msgf("Request (%v): %#v", req.URL, req)
+	c.logger.Sugar().Debugf("Request (%v): %#v", req.URL, req)
 
 	obj, resp, err := sendRequestAndParse[T](ctx, c, req, response)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	log.Debug().Msgf("Response: %#v", resp)
+	c.logger.Sugar().Debugf("Response: %#v", resp)
 
 	return obj, resp, nil
 }
