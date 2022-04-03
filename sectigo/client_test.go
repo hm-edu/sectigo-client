@@ -64,7 +64,7 @@ func TestClientService_Collect(t *testing.T) {
 
 	logger, _ := zap.NewProduction()
 	c := NewClient(http.DefaultClient, logger, "", "", "")
-	cert, err := c.ClientService.Collect(1234)
+	cert, err := c.ClientService.Collect(1234, "x509")
 	assert.Nil(t, err)
 	assert.Equal(t, "Test", *cert)
 }

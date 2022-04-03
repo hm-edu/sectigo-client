@@ -47,9 +47,23 @@ func (c *ClientService) RevokeByEmail(req client.RevokeByEmailRequest) error {
 	return err
 }
 
-// Collect downloads the certificate for the given id.
-func (c *ClientService) Collect(id int) (*string, error) {
-	resp, err := GetWithoutJSONResponse(context.Background(), c.Client, fmt.Sprintf("/smime/v1/collect/%v?format=x509", id))
+// Collect downloads the certificate for the given ordernumber and format.
+// Possible formats are:
+//
+// - 'x509' for Certificate (w/ chain), PEM encoded
+// - 'x509CO' for Certificate only, PEM encoded
+// - 'base64' for PKCS#7, PEM encoded
+// - 'bin' for PKCS#7
+// - 'x509IO' for Root/Intermediate(s) only, PEM encoded
+// - 'x509IOR' for Intermediate(s)/Root only, PEM encoded
+// - 'pem' for Certificate (w/ chain), PEM encoded
+// - 'pemco' for Certificate only, PEM encoded
+// - 'pemia' for Certificate (w/ issuer after), PEM encoded
+// - 'pkcs12' for Certificate and Private key, PKCS#12
+//
+// Depending on configuration at sectigo some options could be unavailable (e.g. pkcs12 requires access to the private key).
+func (c *ClientService) Collect(orderNumber int, format string) (*string, error) {
+	resp, err := GetWithoutJSONResponse(context.Background(), c.Client, fmt.Sprintf("/smime/v1/collect/%d?format=%s", orderNumber, format))
 	bodyString, err := stringFromResponse(err, resp)
 	return bodyString, err
 }
