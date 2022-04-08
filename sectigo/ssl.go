@@ -3,6 +3,7 @@ package sectigo
 import (
 	"context"
 	"fmt"
+
 	"github.com/hm-edu/sectigo-client/sectigo/ssl"
 )
 
@@ -64,8 +65,8 @@ func (c *SSLService) Enroll(req ssl.EnrollmentRequest) (*ssl.EnrollmentResponse,
 // 'pkcs12' - for Certificate and Private key, PKCS#12
 //
 // Depending on configuration at sectigo some options could be unavailable (e.g. pkcs12 requires access to the private key).
-func (c *SSLService) Collect(sslId int, format string) (*string, error) {
-	resp, err := GetWithoutJSONResponse(context.Background(), c.Client, fmt.Sprintf("/ssl/v1/collect/%d?format=%s", sslId, format))
+func (c *SSLService) Collect(sslID int, format string) (*string, error) {
+	resp, err := GetWithoutJSONResponse(context.Background(), c.Client, fmt.Sprintf("/ssl/v1/collect/%d?format=%s", sslID, format))
 	bodyString, err := stringFromResponse(err, resp)
 	return bodyString, err
 }

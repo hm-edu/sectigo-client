@@ -50,7 +50,7 @@ type ListProfileItem struct {
 
 // EnrollmentRequest represents all required data for enrolling a certificate.
 type EnrollmentRequest struct {
-	OrgId             int    `json:"orgId"`
+	OrgID             int    `json:"orgId"`
 	SubjAltNames      string `json:"subjAltNames"`
 	CertType          int    `json:"certType"`
 	Term              int    `json:"term"`
