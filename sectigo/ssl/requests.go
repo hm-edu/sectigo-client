@@ -54,12 +54,12 @@ type EnrollmentRequest struct {
 	SubjAltNames      string `json:"subjAltNames"`
 	CertType          int    `json:"certType"`
 	Term              int    `json:"term"`
-	Comments          string `json:"comments"`
-	ExternalRequester string `json:"externalRequester"`
+	Comments          string `json:"comments,omitempty"`
+	ExternalRequester string `json:"externalRequester,omitempty"`
 	CustomFields      []struct {
 		Name  string `json:"name"`
 		Value string `json:"value"`
-	} `json:"customFields"`
+	} `json:"customFields,omitempty"`
 	Csr string `json:"csr"`
 }
 
