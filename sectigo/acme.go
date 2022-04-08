@@ -14,6 +14,12 @@ type ACMEService struct {
 	Client *Client
 }
 
+// Details gets the information for a single acme accounts.
+func (c *ACMEService) Details(id int) (*acme.ListACMEItem, error) {
+	data, _, err := Get[acme.ListACMEItem](context.Background(), c.Client, fmt.Sprintf("/acme/v1/account/%v", id))
+	return data, err
+}
+
 // List enumerates all acme accounts.
 func (c *ACMEService) List(request acme.ListRequest) (*[]acme.ListACMEItem, error) {
 	params, err := formatParams(&request)
