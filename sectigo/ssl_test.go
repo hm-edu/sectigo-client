@@ -91,3 +91,30 @@ func TestSslService_Profiles(t *testing.T) {
 	assert.Equal(t, 1, len(*profiles))
 	assert.Equal(t, []int{365}, (*profiles)[0].Terms)
 }
+
+func TestSslService_Enroll(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	httpmock.RegisterResponder("POST", "https://cert-manager.com/api/ssl/v1/enroll", httpmock.NewStringResponder(200, `{"sslId":123,"renewId":"123"}`))
+
+	logger, _ := zap.NewProduction()
+	c := NewClient(http.DefaultClient, logger, "", "", "")
+	enroll, err := c.SslService.Enroll(ssl.EnrollmentRequest{})
+	if err != nil {
+		return
+	}
+	assert.Nil(t, err)
+	assert.Equal(t, ssl.EnrollmentResponse{SslID: 123, RenewID: "123"}, *enroll)
+}
+
+func TestSslService_Collect(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	httpmock.RegisterResponder("GET", "https://cert-manager.com/api/ssl/v1/collect/1234?format=x509", httpmock.NewStringResponder(200, `Test`))
+
+	logger, _ := zap.NewProduction()
+	c := NewClient(http.DefaultClient, logger, "", "", "")
+	cert, err := c.SslService.Collect(1234, "x509")
+	assert.Nil(t, err)
+	assert.Equal(t, "Test", *cert)
+}

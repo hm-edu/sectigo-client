@@ -47,3 +47,24 @@ type ListProfileItem struct {
 	KeyTypes            map[string][]string `json:"keyTypes,omitempty"`
 	UseSecondaryOrgName bool                `json:"useSecondaryOrgName,omitempty"`
 }
+
+// EnrollmentRequest represents all required data for enrolling a certificate.
+type EnrollmentRequest struct {
+	OrgId             int    `json:"orgId"`
+	SubjAltNames      string `json:"subjAltNames"`
+	CertType          int    `json:"certType"`
+	Term              int    `json:"term"`
+	Comments          string `json:"comments"`
+	ExternalRequester string `json:"externalRequester"`
+	CustomFields      []struct {
+		Name  string `json:"name"`
+		Value string `json:"value"`
+	} `json:"customFields"`
+	Csr string `json:"csr"`
+}
+
+// EnrollmentResponse represents the information returned after enrolling a certificate using a CSR.
+type EnrollmentResponse struct {
+	SslID   int    `json:"sslId"`
+	RenewID string `json:"renewId"`
+}

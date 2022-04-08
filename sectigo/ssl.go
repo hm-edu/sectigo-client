@@ -3,7 +3,6 @@ package sectigo
 import (
 	"context"
 	"fmt"
-
 	"github.com/hm-edu/sectigo-client/sectigo/ssl"
 )
 
@@ -41,4 +40,32 @@ func (c *SSLService) Revoke(serial, reason string) error {
 func (c *SSLService) Profiles() (*[]ssl.ListProfileItem, error) {
 	data, _, err := Get[[]ssl.ListProfileItem](context.Background(), c.Client, "/ssl/v1/types")
 	return data, err
+}
+
+// Enroll submits an CSR to the server.
+func (c *SSLService) Enroll(req ssl.EnrollmentRequest) (*ssl.EnrollmentResponse, error) {
+	data, _, err := Post[ssl.EnrollmentResponse](context.Background(), c.Client, "/ssl/v1/enroll", req)
+	return data, err
+}
+
+// Collect downloads the certificate for the given sslId and format.
+//
+// Possible formats are:
+// 'x509' - for Certificate (w/ chain), PEM encoded,
+// 'x509CO' - for Certificate only, PEM encoded,
+// 'base64' - for PKCS#7, PEM encoded,
+// 'bin' - for PKCS#7
+// 'x509IO' - for Root/Intermediate(s) only, PEM encoded,
+// 'x509IOR' - for Intermediate(s)/Root only, PEM encoded,
+// 'pem' - for Certificate (w/ chain), PEM encoded,
+// 'pemco' - for Certificate only, PEM encoded,
+// 'pemia' - for Certificate (w/ issuer after), PEM encoded,
+// 'x509' - for Certificate (w/ chain), PEM encoded,
+// 'pkcs12' - for Certificate and Private key, PKCS#12
+//
+// Depending on configuration at sectigo some options could be unavailable (e.g. pkcs12 requires access to the private key).
+func (c *SSLService) Collect(sslId int, format string) (*string, error) {
+	resp, err := GetWithoutJSONResponse(context.Background(), c.Client, fmt.Sprintf("/ssl/v1/collect/%d?format=%s", sslId, format))
+	bodyString, err := stringFromResponse(err, resp)
+	return bodyString, err
 }
