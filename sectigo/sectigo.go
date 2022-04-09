@@ -163,17 +163,19 @@ func makeRequest[T any](ctx context.Context, c *Client, method, path string, pay
 	}
 	req, err := c.buildRequest(method, path, payload)
 	if err != nil {
+		c.logger.Warn("Building request failed", zap.Any("method", method), zap.Any("path", path), zap.Any("payload", payload))
 		return nil, nil, err
 	}
 
-	c.logger.Sugar().Debugf("Request (%v): %#v", req.URL, req)
+	c.logger.Debug("Request", zap.Any("url", req.URL), zap.Any("req", req))
 
 	obj, resp, err := sendRequestAndParse[T](ctx, c, req, response)
 	if err != nil {
+		c.logger.Warn("Request failed", zap.Any("resp", err))
 		return nil, nil, err
 	}
 
-	c.logger.Sugar().Debugf("Response: %#v", resp)
+	c.logger.Debug("Response", zap.Any("resp", resp))
 
 	return obj, resp, nil
 }
