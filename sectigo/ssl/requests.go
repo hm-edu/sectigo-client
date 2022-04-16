@@ -26,7 +26,7 @@ type Details struct {
 	Status                  CertificateStatus  `json:"status"`
 	OrderNumber             int                `json:"orderNumber"`
 	Term                    int                `json:"term"`
-	Requested               JSONDate           `json:"requested"`
+	Requested               *JSONDate          `json:"requested"`
 	Expires                 JSONDate           `json:"expires"`
 	SubjectAlternativeNames []string           `json:"subjectAlternativeNames"`
 	SerialNumber            string             `json:"serialNumber"`
