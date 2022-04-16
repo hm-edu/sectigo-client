@@ -167,15 +167,13 @@ func makeRequest[T any](ctx context.Context, c *Client, method, path string, pay
 		return nil, nil, err
 	}
 
-	c.logger.Debug("Request", zap.Any("url", req.URL), zap.Any("req", req))
+	c.logger.Debug("Request", zap.Any("url", req.URL))
 
 	obj, resp, err := sendRequestAndParse[T](ctx, c, req, response)
 	if err != nil {
 		c.logger.Warn("Request failed", zap.Any("resp", err))
 		return nil, nil, err
 	}
-
-	c.logger.Debug("Response", zap.Any("resp", resp))
 
 	return obj, resp, nil
 }

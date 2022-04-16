@@ -1,16 +1,12 @@
 package ssl
 
-import (
-	"github.com/hm-edu/sectigo-client/sectigo/misc"
-)
-
 // ListSSLRequest provides the possible filters that can be passed to the SSLService.List method.
 type ListSSLRequest struct {
 	Size                   int               `url:"size,omitempty"`
 	Position               int               `url:"position,omitempty"`
-	SubjectAlternativeName string            `url:"subjectAlternativeName"`
-	CommonName             string            `url:"commonName"`
-	Status                 CertificateStatus `url:"status"`
+	SubjectAlternativeName string            `url:"subjectAlternativeName,omitempty"`
+	CommonName             string            `url:"commonName,omitempty"`
+	Status                 CertificateStatus `url:"status,omitempty"`
 }
 
 // ListItem represents a single item returned by the SSLService.List method.
@@ -29,8 +25,8 @@ type Details struct {
 	OrgID                   int                `json:"orgId"`
 	Status                  CertificateStatus  `json:"status"`
 	OrderNumber             int                `json:"orderNumber"`
-	CertType                misc.CertType      `json:"certType"`
 	Term                    int                `json:"term"`
+	Requested               JSONDate           `json:"requested"`
 	Expires                 JSONDate           `json:"expires"`
 	SubjectAlternativeNames []string           `json:"subjectAlternativeNames"`
 	SerialNumber            string             `json:"serialNumber"`
