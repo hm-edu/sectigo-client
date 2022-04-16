@@ -36,7 +36,7 @@ func TestSslService_List_Unauthorized(t *testing.T) {
 
 	logger, _ := zap.NewProduction()
 	c := NewClient(http.DefaultClient, logger, "", "", "")
-	list, err := c.SslService.List()
+	list, err := c.SslService.List(&ssl.ListSSLRequest{})
 
 	assert.NotNil(t, err)
 	assert.Nil(t, list)
@@ -49,7 +49,7 @@ func TestSslService_List(t *testing.T) {
 
 	logger, _ := zap.NewProduction()
 	c := NewClient(http.DefaultClient, logger, "", "", "")
-	list, err := c.SslService.List()
+	list, err := c.SslService.List(&ssl.ListSSLRequest{})
 
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(*list))

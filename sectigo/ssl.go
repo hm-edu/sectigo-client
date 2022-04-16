@@ -18,8 +18,12 @@ type RevokeRequest struct {
 }
 
 // List enumerates all ssl certificates.
-func (c *SSLService) List() (*[]ssl.ListItem, error) {
-	data, _, err := Get[[]ssl.ListItem](context.Background(), c.Client, "/ssl/v1")
+func (c *SSLService) List(q *ssl.ListSSLRequest) (*[]ssl.ListItem, error) {
+	params, err := formatParams(q)
+	if err != nil {
+		return nil, err
+	}
+	data, _, err := Get[[]ssl.ListItem](context.Background(), c.Client, fmt.Sprintf("/ssl/v1%v", params))
 	return data, err
 }
 
