@@ -3,6 +3,7 @@ package sectigo
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/hm-edu/sectigo-client/sectigo/ssl"
 )
@@ -18,13 +19,17 @@ type RevokeRequest struct {
 }
 
 // List enumerates all ssl certificates.
-func (c *SSLService) List(q *ssl.ListSSLRequest) (*[]ssl.ListItem, error) {
+func (c *SSLService) List(q *ssl.ListSSLRequest) (*[]ssl.ListItem, int, error) {
 	params, err := formatParams(q)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
-	data, _, err := Get[[]ssl.ListItem](context.Background(), c.Client, fmt.Sprintf("/ssl/v1%v", params))
-	return data, err
+	data, resp, err := Get[[]ssl.ListItem](context.Background(), c.Client, fmt.Sprintf("/ssl/v1%v", params))
+	if err != nil {
+		return nil, 0, err
+	}
+	total, _ := strconv.Atoi(resp.Header.Get("X-Total-Count"))
+	return data, total, err
 }
 
 // Details queries details on a single certificate using the (internal) sectigo ID.
