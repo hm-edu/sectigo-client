@@ -42,6 +42,14 @@ func (c *ClientService) Enroll(req client.EnrollmentRequest) (*client.Enrollment
 }
 
 // RevokeByEmail revokes all certificates associated with an email.
+func (c *ClientService) RevokeBySerial(req client.RevokeBySerialRequest) error {
+	_, err := PostWithoutJSONResponse(context.Background(), c.Client, fmt.Sprintf("/smime/v1/revoke/serial/%v", req.Serial), struct {
+		Reason string `json:"reason"`
+	}{Reason: req.Reason})
+	return err
+}
+
+// RevokeByEmail revokes all certificates associated with an email.
 func (c *ClientService) RevokeByEmail(req client.RevokeByEmailRequest) error {
 	_, err := PostWithoutJSONResponse(context.Background(), c.Client, "/smime/v1/revoke", req)
 	return err

@@ -49,6 +49,12 @@ type EnrollmentRequest struct {
 	Eppn            string   `json:"eppn"`
 }
 
+// RevokeBySerialRequest represents the information required for revoking a certificate by a serial.
+type RevokeBySerialRequest struct {
+	Serial string `json:"email"`
+	Reason string `json:"reason"`
+}
+
 // RevokeByEmailRequest represents the information required for revoking a certificate by an email.
 type RevokeByEmailRequest struct {
 	Email  string `json:"email"`

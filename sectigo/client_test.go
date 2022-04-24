@@ -1,8 +1,10 @@
 package sectigo
 
 import (
+	"io"
 	"net/http"
 	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/hm-edu/sectigo-client/sectigo/client"
@@ -28,6 +30,30 @@ func TestClientService_RevokeByEmail(t *testing.T) {
 	assert.Nil(t, err)
 }
 
+func TestClientService_RevokeBySerial(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	httpmock.RegisterResponder("POST", "https://cert-manager.com/api/smime/v1/revoke/serial/test",
+		func(r *http.Request) (*http.Response, error) {
+			b, err := io.ReadAll(r.Body)
+			if err != nil {
+				assert.Fail(t, err.Error())
+			}
+			data := strings.TrimSpace(string(b))
+			assert.Equal(t, `{"reason":"Compromised"}`, data)
+			return &http.Response{
+				Status:        strconv.Itoa(204),
+				StatusCode:    204,
+				Header:        http.Header{},
+				ContentLength: -1,
+			}, nil
+		})
+
+	logger, _ := zap.NewProduction()
+	c := NewClient(http.DefaultClient, logger, "", "", "")
+	err := c.ClientService.RevokeBySerial(client.RevokeBySerialRequest{Serial: "test", Reason: "Compromised"})
+	assert.Nil(t, err)
+}
 func TestClientService_Enroll(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
