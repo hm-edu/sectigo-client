@@ -63,6 +63,18 @@ func TestDomainValidationService_StartCname(t *testing.T) {
 	assert.Equal(t, dcv.StartCNAMEResponse{Host: "_fc69541f3cb60467c4cf674225e89931.ccmqa.com.", Point: "2e48bb4e8a04ec6ff6396052bfa7e3df.7756667c4e96769d2101d67de72584dd.sectigo.com."}, *data)
 }
 
+func TestDomainValidationService_Clear(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	httpmock.RegisterResponder("POST", "https://cert-manager.com/api/dcv/v1/validation/clear", httpmock.NewStringResponder(200, `{"status":"VALIDATED","orderStatus":"NOT_INITIATED","message":"DCV status: VALIDATED; DCV order status: NOT_INITIATED"}`))
+
+	logger, _ := zap.NewProduction()
+	c := NewClient(http.DefaultClient, logger, "", "", "")
+	data, err := c.DomainValidationService.Clear("ccmdev.com")
+	assert.Nil(t, err)
+	assert.Equal(t, dcv.ClearResponse{Status: domain.Validated, OrderStatus: dcv.NotInitiated, Message: "DCV status: VALIDATED; DCV order status: NOT_INITIATED"}, *data)
+
+}
 func TestDomainValidationService_SubmitCname(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()

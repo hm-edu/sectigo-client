@@ -48,3 +48,10 @@ type SubmitCNAMEResponse struct {
 	OrderStatus DomainValidationOrderStatus `json:"orderStatus"`
 	Message     string                      `json:"message"`
 }
+
+// ClearResponse represents the information after clearing the DCV.
+type ClearResponse struct {
+	Status      domain.ValidationStatus     `json:"status"`
+	OrderStatus DomainValidationOrderStatus `json:"orderStatus"`
+	Message     string                      `json:"message"`
+}

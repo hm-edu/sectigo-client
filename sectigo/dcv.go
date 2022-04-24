@@ -25,6 +25,14 @@ func (c *DomainValidationService) Status(domain string) (*dcv.StatusResponse, er
 	return data, err
 }
 
+// Clear resets the status of the DCV request.
+func (c *DomainValidationService) Clear(domain string) (*dcv.ClearResponse, error) {
+	data, _, err := Post[dcv.ClearResponse](context.Background(), c.Client, "/dcv/v1/validation/clear", dcv.Request{
+		Domain: domain,
+	})
+	return data, err
+}
+
 // StartCNAME starts the validation using the CNAME method.
 func (c *DomainValidationService) StartCNAME(domain string) (*dcv.StartCNAMEResponse, error) {
 	data, _, err := Post[dcv.StartCNAMEResponse](context.Background(), c.Client, "/dcv/v1/validation/start/domain/cname", dcv.Request{
