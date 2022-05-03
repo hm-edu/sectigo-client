@@ -6,6 +6,7 @@ type ListSSLRequest struct {
 	Position               int               `url:"position,omitempty"`
 	SubjectAlternativeName string            `url:"subjectAlternativeName,omitempty"`
 	CommonName             string            `url:"commonName,omitempty"`
+	SerialNumber           string            `url:"serialNumber,omitempty"`
 	Status                 CertificateStatus `url:"status,omitempty"`
 }
 
