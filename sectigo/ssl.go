@@ -46,6 +46,14 @@ func (c *SSLService) Revoke(serial, reason string) error {
 	return err
 }
 
+// RevokeBySslID revokes a single certificate by the sslid and the reason.
+func (c *SSLService) RevokeBySslID(sslid, reason string) error {
+	_, err := PostWithoutJSONResponse(context.Background(), c.Client, fmt.Sprintf("/ssl/v1/revoke/%v", sslid), RevokeRequest{
+		Reason: reason,
+	})
+	return err
+}
+
 // Profiles enumerates all ssl certificate profiles.
 func (c *SSLService) Profiles() (*[]ssl.ListProfileItem, error) {
 	data, _, err := Get[[]ssl.ListProfileItem](context.Background(), c.Client, "/ssl/v1/types")
