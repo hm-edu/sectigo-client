@@ -10,10 +10,12 @@ import (
 )
 
 func Test_Get(t *testing.T) {
+	// nolint:staticcheck
 	resp, err := GetWithoutJSONResponse(nil, nil, "")
 	assert.Nil(t, resp)
 	assert.NotNil(t, err)
 	logger, _ := zap.NewProduction()
+	// nolint:staticcheck
 	resp, err = GetWithoutJSONResponse(nil, NewClient(nil, logger, "", "", ""), "")
 	assert.Nil(t, resp)
 	assert.NotNil(t, err)

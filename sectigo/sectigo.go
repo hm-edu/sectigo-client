@@ -110,7 +110,9 @@ func sendRequestAndParse[T any](ctx context.Context, c *Client, req *http.Reques
 	defer func(Body io.ReadCloser) {
 		_ = Body.Close()
 	}(resp.Body)
+	// nolint:staticcheck
 	obj := new(T)
+	// nolint:staticcheck
 	if obj != nil {
 		err = json.NewDecoder(resp.Body).Decode(obj)
 	}
