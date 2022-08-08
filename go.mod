@@ -17,5 +17,5 @@ require (
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	go.uber.org/zap v1.21.0
+	go.uber.org/zap v1.22.0
 )
