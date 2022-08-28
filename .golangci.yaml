@@ -3,7 +3,6 @@ run:
 linters:
   enable:
     - revive
-    - bodyclose
     - deadcode
     - errcheck
     - gofmt

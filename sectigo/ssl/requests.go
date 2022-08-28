@@ -18,7 +18,7 @@ type ListItem struct {
 	SerialNumber            string   `json:"serialNumber"`
 }
 
-//Details represents information about a single ssl certificate.
+// Details represents information about a single ssl certificate.
 type Details struct {
 	CommonName              string             `json:"commonName"`
 	SslID                   int                `json:"sslId"`
@@ -35,7 +35,7 @@ type Details struct {
 	KeyType                 string             `json:"keyType"`
 }
 
-//CertificateDetails represents information about the details of a ssl certificate.
+// CertificateDetails represents information about the details of a ssl certificate.
 type CertificateDetails struct {
 	Issuer                  string `json:"issuer,omitempty"`
 	Subject                 string `json:"subject,omitempty"`

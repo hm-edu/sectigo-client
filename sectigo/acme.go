@@ -36,25 +36,25 @@ func (c *ACMEService) ListServers() (*[]acme.ListACMEServerItem, error) {
 	return data, err
 }
 
-//AddDomains adds new domains to an existing acme account.
+// AddDomains adds new domains to an existing acme account.
 func (c *ACMEService) AddDomains(request acme.AddOrRemoveDomainsRequest, id int) (*acme.AddDomainsResponse, error) {
 	data, _, err := Post[acme.AddDomainsResponse](context.Background(), c.Client, fmt.Sprintf("/acme/v1/account/%v/domains", id), request)
 	return data, err
 }
 
-//DeleteDomains deletes domains from an existing acme account.
+// DeleteDomains deletes domains from an existing acme account.
 func (c *ACMEService) DeleteDomains(request acme.AddOrRemoveDomainsRequest, id int) (*acme.RemoveDomainsResponse, error) {
 	data, _, err := Delete[acme.RemoveDomainsResponse](context.Background(), c.Client, fmt.Sprintf("/acme/v1/account/%v/domains", id), request)
 	return data, err
 }
 
-//DeleteAccount deletes domains from an existing acme account.
+// DeleteAccount deletes domains from an existing acme account.
 func (c *ACMEService) DeleteAccount(id int) error {
 	_, err := DeleteWithoutJSONResponse(context.Background(), c.Client, fmt.Sprintf("/acme/v1/account/%v", id))
 	return err
 }
 
-//CreateAccount creates a new ACME account
+// CreateAccount creates a new ACME account
 func (c *ACMEService) CreateAccount(request acme.CreateACMERequest) (*int, error) {
 	resp, err := PostWithoutJSONResponse(context.Background(), c.Client, "/acme/v1/account", request)
 	if err != nil {
