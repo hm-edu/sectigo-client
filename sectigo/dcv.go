@@ -2,6 +2,8 @@ package sectigo
 
 import (
 	"context"
+	"fmt"
+	"strconv"
 
 	"github.com/hm-edu/sectigo-client/sectigo/dcv"
 )
@@ -12,9 +14,17 @@ type DomainValidationService struct {
 }
 
 // List enumerates all domain validation requests.
-func (c *DomainValidationService) List() (*[]dcv.ListItem, error) {
-	data, _, err := Get[[]dcv.ListItem](context.Background(), c.Client, "/dcv/v1/validation")
-	return data, err
+func (c *DomainValidationService) List(q *dcv.ListDcvRequest) (*[]dcv.ListItem, int, error) {
+	params, err := formatParams(q)
+	if err != nil {
+		return nil, 0, err
+	}
+	data, resp, err := Get[[]dcv.ListItem](context.Background(), c.Client, fmt.Sprintf("/dcv/v1/validation%v", params))
+	if err != nil {
+		return nil, 0, err
+	}
+	total, _ := strconv.Atoi(resp.Header.Get("X-Total-Count"))
+	return data, total, err
 }
 
 // Status queries the status of a single domain.

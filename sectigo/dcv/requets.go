@@ -15,6 +15,12 @@ const (
 	NotInitiated DomainValidationOrderStatus = "NOT_INITIATED"
 )
 
+// ListDcvRequest provides the possible options that can be passed to the DCVService.List method.
+type ListDcvRequest struct {
+	Size     int `url:"size,omitempty"`
+	Position int `url:"position,omitempty"`
+}
+
 // StatusResponse represents the information about the DCV status.
 type StatusResponse struct {
 	Status         domain.ValidationStatus     `json:"status"`

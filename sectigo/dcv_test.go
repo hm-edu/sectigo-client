@@ -23,7 +23,7 @@ func TestDomainValidationService_NoPermission(t *testing.T) {
 
 	logger, _ := zap.NewProduction()
 	c := NewClient(http.DefaultClient, logger, "", "", "")
-	validation, err := c.DomainValidationService.List()
+	validation, _, err := c.DomainValidationService.List(&dcv.ListDcvRequest{})
 	assert.Nil(t, validation)
 	assert.Equal(t, "GET https://cert-manager.com/api/dcv/v1/validation: 400 -3 You are not authorized to perform DCV validation.", fmt.Sprintf("%v", err))
 }
@@ -34,7 +34,19 @@ func TestDomainValidationService_List(t *testing.T) {
 
 	logger, _ := zap.NewProduction()
 	c := NewClient(http.DefaultClient, logger, "", "", "")
-	validation, err := c.DomainValidationService.List()
+	validation, _, err := c.DomainValidationService.List(&dcv.ListDcvRequest{})
+	assert.Nil(t, err)
+	assert.Equal(t, dcv.ListItem{Domain: "ccmqa.com", DCVStatus: domain.Validated, DCVOrderStatus: dcv.NotInitiated, ExpirationDate: misc.JSONDate{Time: time.Date(2022, time.January, 22, 0, 0, 0, 0, time.UTC)}, DCVMethod: "EMAIL"}, (*validation)[0])
+}
+
+func TestDomainValidationService_ListParams(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	httpmock.RegisterResponder("GET", "https://cert-manager.com/api/dcv/v1/validation?size=200", httpmock.NewStringResponder(200, `[{"domain":"ccmqa.com","dcvStatus":"VALIDATED","dcvOrderStatus":"NOT_INITIATED","dcvMethod":"EMAIL","expirationDate":"2022-01-22"},{"domain":"www.ccmqa.com","dcvStatus":"VALIDATED","dcvOrderStatus":"NOT_INITIATED","dcvMethod":"EMAIL","expirationDate":"2022-01-22"}]`))
+
+	logger, _ := zap.NewProduction()
+	c := NewClient(http.DefaultClient, logger, "", "", "")
+	validation, _, err := c.DomainValidationService.List(&dcv.ListDcvRequest{Size: 200})
 	assert.Nil(t, err)
 	assert.Equal(t, dcv.ListItem{Domain: "ccmqa.com", DCVStatus: domain.Validated, DCVOrderStatus: dcv.NotInitiated, ExpirationDate: misc.JSONDate{Time: time.Date(2022, time.January, 22, 0, 0, 0, 0, time.UTC)}, DCVMethod: "EMAIL"}, (*validation)[0])
 }
