@@ -14,6 +14,9 @@ type JSONDate struct {
 // The time is expected to be a quoted string in the format YYYY-MM-DD.
 func (t *JSONDate) UnmarshalJSON(buf []byte) error {
 	val := strings.Trim(string(buf), `"`)
+	if val == "null" {
+		return nil
+	}
 	tt, err := time.Parse("2006-01-02", val)
 	if err != nil {
 		return err

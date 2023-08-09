@@ -95,6 +95,17 @@ func TestClientService_Collect(t *testing.T) {
 	assert.Equal(t, "Test", *cert)
 }
 
+func TestClientService_ListByEmailNil(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	httpmock.RegisterResponder("GET", "https://cert-manager.com/api/smime/v2/byPersonEmail/foobar%40test.de", httpmock.NewStringResponder(200, `[{  "id": 1,  "state": "rejected",  "certificateDetails": {}, "serialNumber": "",  "orderNumber": 0,  "backendCertId": null,  "expires": null}]`))
+	logger, _ := zap.NewProduction()
+	c := NewClient(http.DefaultClient, logger, "", "", "")
+	list, err := c.ClientService.ListByEmail("foobar@test.de")
+	assert.Nil(t, err)
+	assert.Equal(t, 1, httpmock.GetTotalCallCount())
+	assert.Len(t, *list, 1)
+}
 func TestClientService_ListByEmail(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
