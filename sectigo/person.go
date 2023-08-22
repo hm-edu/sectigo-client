@@ -33,3 +33,9 @@ func (c *PersonService) DeletePerson(id int) error {
 	_, err := DeleteWithoutJSONResponse(context.Background(), c.Client, fmt.Sprintf("/person/v1/%v", id))
 	return err
 }
+
+// UpdatePerson updates a person using the provided id and information.
+func (c *PersonService) UpdatePerson(id int, q person.UpdateRequest) error {
+	_, err := PutWithoutJSONResponse(context.Background(), c.Client, fmt.Sprintf("/person/v1/%v", id), q)
+	return err
+}

@@ -1,6 +1,7 @@
 package sectigo
 
 import (
+	"encoding/json"
 	"net/http"
 	"strconv"
 	"testing"
@@ -66,6 +67,38 @@ func TestPersonService_List(t *testing.T) {
 	list, err := c.PersonService.List(nil)
 	assert.Nil(t, err)
 	assert.Len(t, *list, 1)
+}
+
+func TestPersonService_Update(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	httpmock.RegisterResponder("PUT", "https://cert-manager.com/api/person/v1/1", func(req *http.Request) (*http.Response, error) {
+		update := person.UpdateRequest{}
+		if err := json.NewDecoder(req.Body).Decode(&update); err != nil {
+			return httpmock.NewStringResponse(400, ""), nil
+		}
+		assert.Equal(t, person.UpdateRequest{
+			FirstName:      "Tester",
+			MiddleName:     "",
+			LastName:       "",
+			OrganizationID: 3105,
+			ValidationType: "STANDARD",
+			CommonName:     "Tester",
+		}, update)
+		return httpmock.NewStringResponse(200, ""), nil
+	})
+
+	logger, _ := zap.NewProduction()
+	c := NewClient(http.DefaultClient, logger, "", "", "")
+	err := c.PersonService.UpdatePerson(1, person.UpdateRequest{
+		FirstName:      "Tester",
+		MiddleName:     "",
+		LastName:       "",
+		OrganizationID: 3105,
+		ValidationType: "STANDARD",
+		CommonName:     "Tester",
+	})
+	assert.Nil(t, err)
 }
 
 func TestPersonService_ListFiltered(t *testing.T) {

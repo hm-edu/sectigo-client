@@ -15,6 +15,16 @@ type CreateRequest struct {
 	Upn             string   `json:"upn"`
 }
 
+// UpdateRequest represents the information required for updating a person.
+type UpdateRequest struct {
+	FirstName      string `json:"firstName"`
+	MiddleName     string `json:"middleName"`
+	LastName       string `json:"lastName"`
+	OrganizationID int    `json:"organizationId"`
+	ValidationType string `json:"validationType"`
+	CommonName     string `json:"commonName"`
+}
+
 // ListParams provides the possible filters that can be passed to the PersonService.List method.
 type ListParams struct {
 	Position       int    `url:"position,omitempty"`
