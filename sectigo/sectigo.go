@@ -88,6 +88,13 @@ func DeleteWithoutJSONResponse(ctx context.Context, c *Client, path string) (*ht
 	return resp, err
 }
 
+// DeleteWithoutJSONResponse executes a DELETE-Request without expecting a JSON response.
+// Custom handling of the response can be done using the returned http.Response.
+func PutWithoutJSONResponse(ctx context.Context, c *Client, path string, payload interface{}) (*http.Response, error) {
+	_, resp, err := makeRequest[any](ctx, c, http.MethodPut, path, payload, false)
+	return resp, err
+}
+
 func sendRequestAndParse[T any](ctx context.Context, c *Client, req *http.Request, response bool) (*T, *http.Response, error) {
 	if ctx == nil {
 		return nil, nil, errors.New("context must be non-nil")
