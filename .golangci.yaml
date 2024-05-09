@@ -1,9 +1,8 @@
 run:
-  go: 1.19
+  go: "1.22"
 linters:
   enable:
     - revive
-    - deadcode
     - errcheck
     - gofmt
     - goimports
@@ -14,11 +13,9 @@ linters:
     - misspell
     - prealloc
     - staticcheck
-    - structcheck
     - typecheck
     - unconvert
     - unused
-    - varcheck
 linters-settings:
   revive:
     severity: warning
